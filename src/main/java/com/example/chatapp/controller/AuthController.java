@@ -1,5 +1,7 @@
 package com.example.chatapp.controller;
 
+import com.example.chatapp.dto.LoginRequest;
+import com.example.chatapp.dto.LoginResponse;
 import com.example.chatapp.dto.RegisterRequest;
 import com.example.chatapp.dto.UserResponse;
 import com.example.chatapp.services.AuthService;
@@ -25,4 +27,11 @@ public class AuthController {
 	public String login() {
 		return "logged in";
 	}
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(
+        @Valid @RequestBody LoginRequest request
+    ) {
+        LoginResponse resp = authService.login(request);
+        return ResponseEntity.ok(resp);
+    }
 }

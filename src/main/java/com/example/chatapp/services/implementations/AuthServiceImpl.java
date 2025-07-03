@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import com.example.chatapp.models.User;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +43,12 @@ public class AuthServiceImpl implements AuthService{
 	@Override
 	public LoginResponse login(LoginRequest request) {
 		// TODO Auto-generated method stub
-		return null;
+		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+					request.username(),request.password()
+				));
+		User user=userRepository.findByUsername(request.username()).orElseThrow(()-> new UsernameNotFoundException("Username invalid"));
+		String token=jwtService.generateToken(user);
+		return new LoginResponse(token);
 	}
 
 }
